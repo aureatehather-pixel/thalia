@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
+
+    <!--
+      The isolated chatgptCheck build only, the Slice 6 feasibility proof (docs/slice6-chatgpt-plan-proof.md). Application id
+      com.thalia.app.chatgptcheck: its own data directory and Keystore. INTERNET is requested here, in the geminiCheck build and in
+      the debug build type's M3A spike, and nowhere else. Synthetic data only. Nothing is sent until the owner gives consent, signs
+      in and presses a button that says it sends. The microphone is the main manifest's, asked at runtime on Speak. Text-to-speech
+      engines are visible through the queries entry below, which is all speech output needs.
+    -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- The main manifest's other permissions belong to alarms, notifications and calls. This proof uses none of them. -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" tools:node="remove" />
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" tools:node="remove" />
+    <uses-permission android:name="android.permission.VIBRATE" tools:node="remove" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" tools:node="remove" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" tools:node="remove" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" tools:node="remove" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" tools:node="remove" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" tools:node="remove" />
+
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.TTS_SERVICE" />
+        </intent>
+    </queries>
+
+    <!--
+      The main manifest also brings its launcher screen, planning and conversation screens, the check-in call service and three
+      alarm and boot receivers, and its Application class. None is part of this proof, so each is removed here, and the plain
+      Application replaces ThaliaApplication: nothing of the main app initializes, schedules or reconciles in this package.
+    -->
+    <application
+        android:name="android.app.Application"
+        tools:replace="android:name">
+        <activity android:name="com.thalia.app.MainActivity" tools:node="remove" />
+        <activity android:name="com.thalia.app.planning.PlanningActivity" tools:node="remove" />
+        <activity android:name="com.thalia.app.conversation.ConversationActivity" tools:node="remove" />
+        <activity android:name="com.thalia.app.ai.AiSettingsActivity" tools:node="remove" />
+        <activity android:name="com.thalia.app.ui.SettingsActivity" tools:node="remove" />
+        <activity android:name="com.thalia.app.ui.ManualActivity" tools:node="remove" />
+        <activity android:name="com.thalia.app.ToolsActivity" tools:node="remove" />
+        <activity android:name="com.thalia.app.checkin.GuidedCheckInActivity" tools:node="remove" />
+        <activity android:name="com.thalia.app.voicecheckins.call.CallActivity" tools:node="remove" />
+        <service android:name="com.thalia.app.voicecheckins.call.CheckInCallService" tools:node="remove" />
+        <receiver android:name="com.thalia.app.voicecheckins.schedule.CheckInAlarmReceiver" tools:node="remove" />
+        <receiver android:name="com.thalia.app.voicecheckins.schedule.SystemEventReceiver" tools:node="remove" />
+        <receiver android:name="com.thalia.app.reminders.ReminderAlarmReceiver" tools:node="remove" />
+        <activity
+            android:name="com.thalia.app.chatgptcheck.ChatGptCheckActivity"
+            android:exported="true"
+            android:label="Thalia ChatGPT proof"
+            android:taskAffinity="${applicationId}.chatgptcheck"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|uiMode"
+            android:theme="@style/Theme.Thalia">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

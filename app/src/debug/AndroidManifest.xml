@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+      Debug builds only: the M3A manual Gemini Live spike. See
+      docs/adr/0008-m3a-manual-gemini-live-spike.md. Nothing here is merged into a release build,
+      which keeps requesting none of these permissions.
+
+        INTERNET               the WebSocket to the Gemini Live API.
+        RECORD_AUDIO           the microphone, opened only while a session is running.
+        ACCESS_NETWORK_STATE   the start gate asks for a validated network.
+        MODIFY_AUDIO_SETTINGS  switching to the communication audio mode for the session, and back.
+                               A normal permission, granted at install. Without it Android ignores
+                               the mode change, and the platform's voice processing is not engaged.
+
+      Still never declared, here or anywhere: FOREGROUND_SERVICE_MICROPHONE, a microphone
+      foreground service type, or any telephony permission. A session runs only while its screen
+      is in the foreground, and leaving the screen ends it.
+    -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+
+    <application>
+        <!--
+          Its own launcher entry and its own task, so the spike needs nothing from the main
+          source set and the main screen keeps no reference to it. Not recreated on rotation or
+          a theme change, so a session is not cut short by one.
+        -->
+        <activity
+            android:name="com.thalia.app.m3a.LiveVoiceTestActivity"
+            android:exported="true"
+            android:label="Thalia live test"
+            android:launchMode="singleTop"
+            android:taskAffinity="${applicationId}.m3a"
+            android:theme="@style/Theme.Thalia"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden|uiMode">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

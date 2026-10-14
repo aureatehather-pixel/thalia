@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+      Permission set through M2 slice 2. Every entry below is used by code in this module,
+      and nothing is declared ahead of the milestone that needs it.
+
+      Deliberately absent, and to stay absent until their milestone:
+        INTERNET                M3. Nothing here reaches the network.
+
+      Deliberately absent for good: USE_EXACT_ALARM. It is granted at install and the user
+      cannot revoke it, so the app could never see or show the state where exact alarms are
+      unavailable. See ADR 0005.
+
+      Never to be declared at all: READ_PHONE_STATE, CALL_PHONE, READ_CONTACTS,
+      READ_SMS, or any other telephony permission. This is an internet call. It has no
+      relationship to the cellular network, the dialer, or the address book, and asking
+      for those would be both unnecessary and dishonest about what the app does.
+    -->
+
+    <!--
+      Slice 4B. Runtime permission, requested only when the person presses Speak on the conversation screen, for the
+      on-device speech recognizer. The microphone is opened only while a listen is in progress, and listening stops when the
+      screen is backgrounded or left. No service, call or background code uses it. Voice conversation and Gemini Live are
+      not part of this declaration.
+    -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+    <!-- Runtime permission from Android 13. Without it nothing can be shown at all. -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!--
+      Normal permission, meaningful from Android 14. Granted at install; the Play Store
+      is what revokes it for apps that are not calling or alarm apps, so a sideloaded
+      build keeps it. The user can still revoke it by hand, which is why the app checks
+      canUseFullScreenIntent() at runtime rather than assuming.
+    -->
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <!--
+      Normal permission, granted at install. Used only to hold the CPU awake for the ten
+      second window of a development test call, so that its timer fires with the screen
+      off. Every hold has a timeout. It is not scheduling, and M2 does not depend on it.
+    -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+
+    <!--
+      Lets Thalia set the exact alarm that starts a scheduled check-in. Not granted to a
+      fresh install that targets Android 13 or later: the user turns it on under Special app
+      access > Alarms & reminders, and can turn it off again, which stops the app and cancels
+      its alarms. The app reads it with canScheduleExactAlarms() and says so when it is off.
+      There is no approximate-alarm fallback.
+    -->
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+
+    <!--
+      Lets the app hear that the phone has restarted, so it can arm its alarms again. Android
+      cancels every alarm when the phone shuts down. Normal permission, granted at install.
+      Only the broadcast that follows the first unlock is used, because the database is not
+      readable before it.
+    -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <application
+        android:name=".ThaliaApplication"
+        android:allowBackup="false"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Thalia">
+
+        <!--
+          The launcher entry. It shows nothing: it runs the start-up reconcile and hands over to the four-tab shell
+          (PlanningActivity), then finishes. NoDisplay is why it needs no window of its own.
+        -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.Thalia.Launcher">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!--
+          The incoming-call surface.
+
+          showWhenLocked + turnScreenOn are what let this appear over the keyguard when
+          the full-screen intent fires. excludeFromRecents and a private taskAffinity
+          keep a call out of the recents list and out of the main app task, so
+          dismissing a call never disturbs the rest of Thalia.
+        -->
+        <!-- The four-tab shell's host of Today, Plan and Life (ADR 0009 planning, working day, Inbox, reminders). Not a launcher entry. -->
+        <activity
+            android:name=".planning.PlanningActivity"
+            android:exported="false" />
+
+        <!-- Settings, opened from the profile button on every tab. -->
+        <activity
+            android:name=".ui.SettingsActivity"
+            android:exported="false" />
+
+        <!-- The user manual, opened from Settings. -->
+        <activity
+            android:name=".ui.ManualActivity"
+            android:exported="false" />
+
+        <!-- Check-in tools: the development screen the app used to start on. Reached from Settings. -->
+        <activity
+            android:name=".ToolsActivity"
+            android:exported="false" />
+
+        <!-- Text conversation, ADR 0010: the Thalia tab. Reached from the tab bar and from the planning screen. -->
+        <activity
+            android:name=".conversation.ConversationActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <!-- AI consent, key and budget, ADR 0013. Reached from the planning and conversation screens only. -->
+        <!-- The structured check-in: no AI, no network. Not exported; reached from a call's Answer or a button. -->
+        <activity
+            android:name=".checkin.GuidedCheckInActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ai.AiSettingsActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".voicecheckins.call.CallActivity"
+            android:exported="false"
+            android:showWhenLocked="true"
+            android:turnScreenOn="true"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTop"
+            android:taskAffinity=".voicecheckins.call"
+            android:theme="@style/Theme.Thalia"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|uiMode" />
+
+        <!--
+          One foreground service, held only while ringing or while a session is active.
+
+          specialUse rather than phoneCall: the phoneCall type requires MANAGE_OWN_CALLS
+          or the default-dialer role and a ConnectionService integration. This is an
+          internet call with no telecom integration, so claiming phoneCall would mean
+          taking a telephony permission the app has no business holding. specialUse is
+          the accurate declaration, and it needs no runtime prerequisite.
+
+          shortService would need no permission at all, but it carries a hard three
+          minute cap and cannot start other foreground services, which a real check-in
+          would eventually hit. Choosing it now would only move the problem to M3.
+        -->
+        <service
+            android:name=".voicecheckins.call.CheckInCallService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Presents a scheduled personal voice check-in as an incoming internet call and hosts the resulting conversation. Runs only while ringing or while a check-in is in progress, and stops itself as soon as the call ends. In development builds it also runs for the ten seconds a test call is armed." />
+        </service>
+
+        <!--
+          Receives the exact alarm and starts the existing call through the service above.
+          Not exported: only the system delivering Thalia's own PendingIntent can reach it.
+        -->
+        <receiver
+            android:name=".voicecheckins.schedule.CheckInAlarmReceiver"
+            android:exported="false" />
+
+        <!--
+          Reconciles the stored occurrences with Android's alarms after a restart, an update of
+          the app, a change of the clock or the time zone, or the exact-alarm permission being
+          granted. Every one is a broadcast that only the system can send, so this is not exported.
+          It never rings a call and starts no foreground service.
+        -->
+        <receiver
+            android:name=".voicecheckins.schedule.SystemEventReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+                <action android:name="android.intent.action.TIME_SET" />
+                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
+                <action android:name="android.app.action.SCHEDULE_EXACT_ALARM_PERMISSION_STATE_CHANGED" />
+            </intent-filter>
+        </receiver>
+
+        <!-- One-shot reminders, ADR 0014. Not exported: only the system delivering Thalia's own PendingIntent can reach it. -->
+        <receiver
+            android:name=".reminders.ReminderAlarmReceiver"
+            android:exported="false" />
+
+    </application>
+
+</manifest>

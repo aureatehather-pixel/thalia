@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Thalia</string>
+    <string name="channel_checkin_calls">Voice check-in calls</string>
+    <string name="channel_checkin_calls_description">Incoming internet calls for your scheduled voice check-ins. Keep this at High importance, or check-ins will not ring.</string>
+    <string name="channel_test_armed">Test call armed</string>
+    <string name="channel_test_armed_description">Shown only while a development test call is waiting to ring. Silent.</string>
+    <string name="test_armed_title">Test call armed</string>
+    <string name="test_armed_text">%1$s will ring shortly. Development test.</string>
+    <string name="test_armed_cancel">Cancel</string>
+    <string name="checkin_opening">Opening check-in</string>
+    <string name="checkin_closing">Closing check-in</string>
+    <string name="channel_reminders">Reminders</string>
+    <string name="channel_reminders_description">One-shot reminders you set yourself. Quiet: no sound and no vibration. They never repeat.</string>
+    <string name="reminder_title">Thalia reminder</string>
+    <string name="reminder_text">Open Thalia to see it.</string>
+</resources>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+      The isolated recoveryCheck build only, ADR 0009 slice 1B. Its application id is
+      com.thalia.app.recoverycheck, so everything it does stays in its own data directory and
+      Keystore. Debug and release builds have neither this screen nor its code.
+    -->
+    <application>
+        <activity
+            android:name="com.thalia.app.recoverycheck.RecoveryCheckActivity"
+            android:exported="true"
+            android:label="Thalia recovery check"
+            android:taskAffinity="${applicationId}.recoverycheck"
+            android:theme="@style/Theme.Thalia">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

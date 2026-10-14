@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+      The isolated liveCheck build only: the everyday V1 route (OpenAI GPT-6 Luna for reasoning, Cartesia sonic-3.6 Ella for speech)
+      checked on a device with synthetic data. Application id com.thalia.app.livecheck: its own data directory, Keystore and
+      planning files; it never reads or writes com.thalia.app.debug. INTERNET is requested here, in the debug build type (the
+      real app) and nowhere else. No request is sent until keys are entered in AI settings and the owner presses Send or the
+      one clearly labelled eight-case button.
+    -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application>
+        <activity
+            android:name="com.thalia.app.livecheck.LiveCheckActivity"
+            android:exported="true"
+            android:label="Thalia live check"
+            android:taskAffinity="${applicationId}.livecheck"
+            android:theme="@style/Theme.Thalia">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

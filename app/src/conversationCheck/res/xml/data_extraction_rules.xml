@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  The isolated conversationCheck build, ADR 0010: the same rules as the real app's, for this
+  build's own planning file names. It replaces src/main/res/xml/data_extraction_rules.xml in this
+  build only.
+-->
+<data-extraction-rules>
+    <cloud-backup>
+        <exclude domain="database" path="conversationcheck-planning.db" />
+        <exclude domain="database" path="conversationcheck-planning.db-wal" />
+        <exclude domain="database" path="conversationcheck-planning.db-shm" />
+        <exclude domain="database" path="conversationcheck-planning.db-journal" />
+        <exclude domain="database" path="conversationcheck-planning-restore.db" />
+        <exclude domain="database" path="conversationcheck-planning-restore.db-wal" />
+        <exclude domain="database" path="conversationcheck-planning-restore.db-shm" />
+        <exclude domain="database" path="conversationcheck-planning-restore.db-journal" />
+        <exclude domain="root" path="no_backup/conversationcheck-planning-key.sealed" />
+        <exclude domain="root" path="no_backup/conversationcheck-planning-key.sealed.new" />
+        <exclude domain="root" path="no_backup/conversationcheck-planning-key.sealed.staging" />
+        <exclude domain="root" path="no_backup/conversationcheck-planning-key.sealed.new.staging" />
+        <exclude domain="root" path="no_backup/conversationcheck-planning-restore-key.sealed" />
+        <exclude domain="root" path="no_backup/conversationcheck-planning-restore-key.sealed.staging" />
+        <exclude domain="root" path="no_backup/conversationcheck-planning-replace.journal" />
+        <exclude domain="root" path="no_backup/conversationcheck-planning-replace.journal.staging" />
+        <exclude domain="root" path="no_backup/conversationcheck-planning-set-aside" />
+        <exclude domain="file" path="ai" />
+    </cloud-backup>
+    <device-transfer>
+        <exclude domain="database" path="conversationcheck-planning.db" />
+        <exclude domain="database" path="conversationcheck-planning.db-wal" />
+        <exclude domain="database" path="conversationcheck-planning.db-shm" />
+        <exclude domain="database" path="conversationcheck-planning.db-journal" />
+        <exclude domain="database" path="conversationcheck-planning-restore.db" />
+        <exclude domain="database" path="conversationcheck-planning-restore.db-wal" />
+        <exclude domain="database" path="conversationcheck-planning-restore.db-shm" />
+        <exclude domain="database" path="conversationcheck-planning-restore.db-journal" />
+        <exclude domain="root" path="no_backup/conversationcheck-planning-key.sealed" />
+        <exclude domain="root" path="no_backup/conversationcheck-planning-key.sealed.new" />
+        <exclude domain="root" path="no_backup/conversationcheck-planning-key.sealed.staging" />
+        <exclude domain="root" path="no_backup/conversationcheck-planning-key.sealed.new.staging" />
+        <exclude domain="root" path="no_backup/conversationcheck-planning-restore-key.sealed" />
+        <exclude domain="root" path="no_backup/conversationcheck-planning-restore-key.sealed.staging" />
+        <exclude domain="root" path="no_backup/conversationcheck-planning-replace.journal" />
+        <exclude domain="root" path="no_backup/conversationcheck-planning-replace.journal.staging" />
+        <exclude domain="root" path="no_backup/conversationcheck-planning-set-aside" />
+        <exclude domain="file" path="ai" />
+    </device-transfer>
+</data-extraction-rules>

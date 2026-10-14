@@ -1,0 +1,7 @@
+root = true
+
+[*.{kt,kts}]
+# Composable functions are named like types (PascalCase) by the Compose convention,
+# which ktlint's function-naming rule would otherwise reject. This is the setting
+# ktlint documents for Compose; it exempts only functions annotated with @Composable.
+ktlint_function_naming_ignore_when_annotated_with = Composable

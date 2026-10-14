@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Planning data never leaves the phone through Android's backup or device transfer. ADR 0009
+  decision 7: its passphrase is wrapped by a Keystore key that cannot leave the phone, so a copied
+  planning.db would arrive unreadable. android:allowBackup="false" already stops cloud backup, but
+  on some devices it does not stop device-to-device transfer, so the files are excluded from both.
+  Moving planning data uses the user's encrypted export instead.
+
+  Named here: the live database and its sidecars, the database an import is staged in and its
+  sidecars, every sealed key with its .new and .staging names, the replacement journal, and the
+  folder that keeps set-aside data (a directory, so everything under it). ADR 0009 decision 8.
+
+  Also named: the app's "ai" folder in the files directory (a directory, so everything under it): the Gemini key sealed by a
+  Keystore key, the ChatGPT-plan route's sealed sign-in, its host id and issued client id, its chosen model, the consent
+  records, the budget ledger, and every .staging name of their atomic writes. A copy would arrive unreadable or stale and is
+  never wanted on another phone, so it is excluded by rule and not left to android:allowBackup="false" or to a failed decryption.
+  The host id and client id are not secrets but identify this install to the service, so they stay on this phone too.
+-->
+<data-extraction-rules>
+    <cloud-backup>
+        <exclude domain="database" path="planning.db" />
+        <exclude domain="database" path="planning.db-wal" />
+        <exclude domain="database" path="planning.db-shm" />
+        <exclude domain="database" path="planning.db-journal" />
+        <exclude domain="database" path="planning-restore.db" />
+        <exclude domain="database" path="planning-restore.db-wal" />
+        <exclude domain="database" path="planning-restore.db-shm" />
+        <exclude domain="database" path="planning-restore.db-journal" />
+        <exclude domain="root" path="no_backup/planning-key.sealed" />
+        <exclude domain="root" path="no_backup/planning-key.sealed.new" />
+        <exclude domain="root" path="no_backup/planning-key.sealed.staging" />
+        <exclude domain="root" path="no_backup/planning-key.sealed.new.staging" />
+        <exclude domain="root" path="no_backup/planning-restore-key.sealed" />
+        <exclude domain="root" path="no_backup/planning-restore-key.sealed.staging" />
+        <exclude domain="root" path="no_backup/planning-replace.journal" />
+        <exclude domain="root" path="no_backup/planning-replace.journal.staging" />
+        <exclude domain="root" path="no_backup/planning-set-aside" />
+        <exclude domain="file" path="ai" />
+    </cloud-backup>
+    <device-transfer>
+        <exclude domain="database" path="planning.db" />
+        <exclude domain="database" path="planning.db-wal" />
+        <exclude domain="database" path="planning.db-shm" />
+        <exclude domain="database" path="planning.db-journal" />
+        <exclude domain="database" path="planning-restore.db" />
+        <exclude domain="database" path="planning-restore.db-wal" />
+        <exclude domain="database" path="planning-restore.db-shm" />
+        <exclude domain="database" path="planning-restore.db-journal" />
+        <exclude domain="root" path="no_backup/planning-key.sealed" />
+        <exclude domain="root" path="no_backup/planning-key.sealed.new" />
+        <exclude domain="root" path="no_backup/planning-key.sealed.staging" />
+        <exclude domain="root" path="no_backup/planning-key.sealed.new.staging" />
+        <exclude domain="root" path="no_backup/planning-restore-key.sealed" />
+        <exclude domain="root" path="no_backup/planning-restore-key.sealed.staging" />
+        <exclude domain="root" path="no_backup/planning-replace.journal" />
+        <exclude domain="root" path="no_backup/planning-replace.journal.staging" />
+        <exclude domain="root" path="no_backup/planning-set-aside" />
+        <exclude domain="file" path="ai" />
+    </device-transfer>
+</data-extraction-rules>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!--
+      The isolated conversationCheck build only, ADR 0010. Its application id is
+      com.thalia.app.conversationcheck, so everything it does stays in its own data directory and
+      Keystore. Debug and release builds have neither this screen nor its scripted provider.
+    -->
+    <!-- This isolated build must have no network at all, whatever a library declares. -->
+    <uses-permission android:name="android.permission.INTERNET" tools:node="remove" />
+
+    <application>
+        <activity
+            android:name="com.thalia.app.conversationcheck.ConversationCheckActivity"
+            android:exported="true"
+            android:label="Thalia conversation check"
+            android:taskAffinity="${applicationId}.conversationcheck"
+            android:theme="@style/Theme.Thalia">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.thalia.app.conversationcheck.ScriptedConversationActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/Theme.Thalia" />
+    </application>
+
+</manifest>

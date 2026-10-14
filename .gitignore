@@ -1,0 +1,28 @@
+# Build output
+build/
+.gradle/
+out/
+*.class
+*.jar
+!gradle/wrapper/gradle-wrapper.jar
+
+# Local machine / SDK configuration (never committed)
+local.properties
+.gradletasknamecache
+
+# Secrets. No API key, token or credential is ever committed to this repository.
+*.keystore
+*.jks
+secrets.properties
+*.local.properties
+.env
+.env.*
+
+# IDE
+.idea/
+*.iml
+.kotlin/
+
+# OS
+.DS_Store
+Thumbs.db

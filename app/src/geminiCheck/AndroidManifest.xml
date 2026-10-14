@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+      The isolated geminiCheck build only, ADR 0013. Application id com.thalia.app.geminicheck: its own data directory and
+      Keystore. INTERNET is requested here and in the debug build type's M3A spike, and nowhere else: release,
+      recoveryCheck and conversationCheck have none. Synthetic data only; no request is sent until a key is entered and
+      Send is pressed. ACCESS_NETWORK_STATE, microphone and telephony permissions are not requested.
+    -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application>
+        <activity
+            android:name="com.thalia.app.geminicheck.GeminiCheckActivity"
+            android:exported="true"
+            android:label="Thalia live check"
+            android:taskAffinity="${applicationId}.geminicheck"
+            android:theme="@style/Theme.Thalia">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

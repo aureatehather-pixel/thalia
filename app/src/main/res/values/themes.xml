@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      Compose paints every pixel of this app, so the platform theme only has to supply a
+      window with no action bar and a background that matches while the first frame is
+      composed. DeviceDefault follows the device's own light or dark setting.
+    -->
+    <style name="Theme.Thalia" parent="android:Theme.DeviceDefault.NoActionBar">
+        <item name="android:windowBackground">?android:attr/colorBackground</item>
+    </style>
+
+    <!-- The launcher entry draws nothing and finishes at once, so it takes the platform's no-display window. -->
+    <style name="Theme.Thalia.Launcher" parent="android:Theme.NoDisplay" />
+</resources>
