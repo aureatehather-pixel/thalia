@@ -1,8 +1,8 @@
 # Thalia
 
-Thalia is a personal, local-first Android planning app. It is built by one person for their own daily use, on a Pixel 10, and published as a portfolio project. It is not a distributed product: there is no store listing, no backend, no accounts and no telemetry.
+Thalia is a local-first Android planning app. 
 
-The idea: a model may *propose* a change to your plan, but Kotlin code validates it and nothing is written until you tap **Approve**. Everything stays on the phone.
+The idea: a model proposes a change to your plan, but Kotlin code validates it and nothing is written until you tap **Approve**. Everything stays on the phone.
 
 ## What it does
 
